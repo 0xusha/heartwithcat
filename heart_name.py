@@ -4,15 +4,12 @@ import random
 import time
 from PIL import Image, ImageTk
 
-# Set up the screen
 screen = turtle.Screen()
-screen.setup(width=1.0, height=1.0) # Full screen
+screen.setup(width=1.0, height=1.0)
 screen.bgcolor("black")
 screen.title("Spinning Heart for Usha with Animated Cat")
-screen.tracer(0) # Manual frame control
+screen.tracer(0)
 
-# --- EXTRACT AND RESIZE ALL GIF FRAMES SILENTLY ---
-# (Removed the loading text so it starts instantly)
 frames = []
 try:
     gif_image = Image.open("cat.gif")
@@ -35,12 +32,10 @@ except EOFError:
 except Exception:
     pass
 
-# --- TURTLE 2: BACKGROUND DUST (Bottom Layer) ---
 bg_t = turtle.Turtle()
 bg_t.hideturtle()
 bg_t.penup()
 
-# --- TURTLE 3: CENTER ANIMATED IMAGE (Middle Layer) ---
 img_t = turtle.Turtle()
 img_t.penup()
 img_t.goto(0, -40) 
@@ -48,16 +43,14 @@ img_t.goto(0, -40)
 if frames:
     img_t.shape("cat_frame_0")
 
-# --- TURTLE 1: MAIN HEART (Top Layer) ---
 t = turtle.Turtle()
 t.hideturtle()
 t.penup()
-t.color("#ff69b4") # Dark pink
+t.color("#ff69b4")
 
 FONT_SIZE = 6
 FONT_STYLE = ("Arial", FONT_SIZE, "bold")
 
-# Initialize background particles
 particles = []
 colors = ["#ff69b4", "#ffe4e1"] 
 
@@ -83,25 +76,18 @@ def update_background(speed_multiplier=1.0):
         bg_t.color(p[4])
         bg_t.write(p[5], align="center", font=("Arial", p[3], "normal"))
 
-# We track real-world time so the GIF never freezes
 animation_start_time = time.time()
 
 def update_gif():
-    """Cycles through GIF frames based on real time for perfectly smooth playback"""
     if not frames:
         return
     
     elapsed_time = time.time() - animation_start_time
-    
-    # ADJUST GIF SPEED HERE: 15 frames per second is standard. 
-    # Increase to 20 to speed it up, decrease to 10 to slow it down.
     fps = 15 
     
     idx = int(elapsed_time * fps) % len(frames)
     img_t.shape(f"cat_frame_{idx}")
 
-
-# --- PHASE 1: VISUALLY DRAWING THE HEART ---
 step_count = 0
 
 for scale in range(16, 22):
@@ -121,7 +107,6 @@ for scale in range(16, 22):
             update_gif()
             screen.update()
 
-# --- PHASE 2: 3D ROTATION EFFECT (Starts Immediately) ---
 current_rotation = 0
 try:
     while True:
@@ -140,8 +125,6 @@ try:
                 t.goto(x, y)
                 t.write("usha", align="center", font=FONT_STYLE)
         
-        # We increase the particle speed multiplier slightly here so they don't look 
-        # like they are slowing down when the heavy 3D rotation processing starts
         update_background(speed_multiplier=3.5)
         update_gif()
         
